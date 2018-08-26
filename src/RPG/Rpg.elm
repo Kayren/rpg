@@ -1,26 +1,33 @@
 module RPG.Rpg exposing (..)
 
-import Rpg.Wardice exposing (Dice)
-import Json
+import RPG.Wardice as Wardice
+import RPG.Utils as Utils
+import Json.Decode
+import Json.Encode
+import Json.Decode.Extra exposing ((|:))
+
 
 type alias Nick =
     { nick : String }
 
-type alias RollSet : { dices : List Dice }
+
+type alias RollSet =
+    { dices : List Wardice.Dice }
+
 
 type alias RollResult =
     { nickname : String
-    , results : List DiceResult
+    , results : List Wardice.DiceResult
     }
 
 
-type alias Error =
+type alias WSError =
     { message : String }
 
 
 type MessageOut
     = SetNick Nick
-    | RollDice { dices : List Dice }
+    | RollDice { dices : List Wardice.Dice }
 
 
 setNickEncoder : String -> Json.Encode.Value
@@ -31,11 +38,11 @@ setNickEncoder nick =
         ]
 
 
-rollDicesEncoder : List Dice -> Json.Encode.Value
+rollDicesEncoder : List Wardice.Dice -> Json.Encode.Value
 rollDicesEncoder dices =
     Json.Encode.object
         [ ( "cmd", Json.Encode.string "RollDice" )
-        , ( "dices", Json.Encode.list <| List.map diceEncoder dices )
+        , ( "dices", Json.Encode.list <| List.map Wardice.diceEncoder dices )
         ]
 
 
@@ -43,7 +50,14 @@ type MessageIn
     = OnNewClient Nick
     | OnClientLeave Nick
     | OnRollDicesResult RollResult
-    | Error Error
+    | Error WSError
+
+
+parseMessageIn : String -> MessageIn
+parseMessageIn str =
+    Json.Decode.decodeString messageInDecoder str
+        |> Result.mapError (\err -> Error { message = err })
+        |> Utils.resolveResult
 
 
 messageInDecoder : Json.Decode.Decoder MessageIn
@@ -68,12 +82,12 @@ messageInDecoder =
                         Json.Decode.map OnRollDicesResult
                             (Json.Decode.succeed RollResult
                                 |: Json.Decode.field "nick" Json.Decode.string
-                                |: Json.Decode.field "result" (Json.Decode.list diceResultDecoder)
+                                |: Json.Decode.field "result" (Json.Decode.list Wardice.diceResultDecoder)
                             )
 
                     "Error" ->
                         Json.Decode.map Error
-                            (Json.Decode.succeed Error
+                            (Json.Decode.succeed WSError
                                 |: Json.Decode.field "message" Json.Decode.string
                             )
 

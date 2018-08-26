@@ -12,5 +12,7 @@ type
       -- Login
     | UpdateNickname String
     | Login
+      -- Server Response
+    | OnMessage String
       -- NoOp
     | NoOp

@@ -8,8 +8,12 @@ import Msg
         )
 import Navigation
 import Router exposing (Route)
+import Json.Encode
+import Json.Decode
 import Task
 import Views
+import WebSocket as Ws
+import RPG.Rpg as Rpg
 
 
 main : Program Model.Flags Model Msg
@@ -36,7 +40,7 @@ init flags location =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Sub.batch [ Ws.listen model.config.url OnMessage ]
 
 
 
@@ -85,10 +89,36 @@ update msg model =
                 ! []
 
         Login ->
-            model ! []
+            model
+                ! [ model.nick
+                        |> Rpg.setNickEncoder
+                        |> Json.Encode.encode 0
+                        |> Ws.send model.config.url
+                  ]
+
+        -- Server Response
+        OnMessage message ->
+            Rpg.parseMessageIn message
+                |> updateMessageIn model
 
         -- NoOp
         NoOp ->
+            model ! []
+
+
+updateMessageIn : Model -> Rpg.MessageIn -> ( Model, Cmd Msg )
+updateMessageIn model msgIn =
+    case msgIn of
+        Rpg.OnNewClient data ->
+            (model |> Model.setReady True) ! [ gotoRoute Router.Home ]
+
+        Rpg.OnClientLeave data ->
+            model ! []
+
+        Rpg.OnRollDicesResult data ->
+            model ! []
+
+        Rpg.Error data ->
             model ! []
 
 

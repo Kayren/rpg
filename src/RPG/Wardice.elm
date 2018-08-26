@@ -1,6 +1,7 @@
 module RPG.Wardice exposing (..)
 
-import Json
+import Json.Decode
+import Json.Encode
 
 
 type alias DiceResult =
@@ -9,7 +10,7 @@ type alias DiceResult =
 
 diceResultDecoder : Json.Decode.Decoder DiceResult
 diceResultDecoder =
-    Json.Decode.map2 (,) (index 0 diceDecoder) (index 1 string)
+    Json.Decode.map2 (,) (Json.Decode.index 0 diceDecoder) (Json.Decode.index 1 Json.Decode.string)
 
 
 type Dice
@@ -28,7 +29,7 @@ diceEncoder v =
         Fortune ->
             Json.Encode.string "Fortune"
 
-        Misortune ->
+        Misfortune ->
             Json.Encode.string "Misfortune"
 
         Expertise ->
@@ -47,14 +48,14 @@ diceEncoder v =
             Json.Encode.string "Reckless"
 
 
-diceDecoder : JSON.Decode.Decoder Dice
+diceDecoder : Json.Decode.Decoder Dice
 diceDecoder =
     Json.Decode.string
         |> Json.Decode.andThen
             (\str ->
                 case str of
                     "Fortune" ->
-                        Json.decode.succeed Fortune
+                        Json.Decode.succeed Fortune
 
                     "Misfortune" ->
                         Json.Decode.succeed Misfortune
