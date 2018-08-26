@@ -6,6 +6,11 @@ body {
   width: 100vw;
 }
 
+@font-face {
+  font-family: war3dice;
+  src: url(assets/war3dice.ttf);
+}
+
 .full-height {
   height: 100vh;
 }
@@ -34,6 +39,10 @@ body {
   align-items: flex-end;
 }
 
+.thread-list .column {
+  padding: 0;
+}
+
 .thread-input {
   height: 10vh;
 }
@@ -47,8 +56,81 @@ body {
   font-weight: bold;
   font-size: 1rem;
   padding-left: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .thread-message {
   padding-left: 1rem;
+}
+
+.thread-roll-result {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 1rem;
+
+}
+
+.thread-roll-result .dice {
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+  height: 64px;
+  width: 64px;
+}
+
+
+/* Dice */
+
+.dice {
+  height: 32px;
+  width: 32px;
+  border: 1px solid black;
+  font-family: 'war3dice';
+}
+
+.fortune {
+  background-color: white;
+  color: black;
+}
+
+.misfortune {
+  background-color: black;
+  color: white;
+}
+
+.expertise {
+  background-color: yellow;
+  color: black;
+}
+
+.characteristic {
+  background-color: blue;
+  color: white;
+}
+
+.challenge {
+  background-color: blueviolet;
+  color: white;
+}
+
+.conservative {
+  background-color: green;
+  color: black;
+}
+
+.reckless {
+  background-color: red;
+  color: black;
+}
+
+.wardice {
+  text-align: center;
+  font-size: 48px;
+  line-height: 48px;
+  padding-top: 8px;
+}
+
+.two-symbols .wardice {
+  font-size: 32px;
+  line-height: 32px;
+  padding-top: 0;
 }

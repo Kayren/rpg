@@ -17,7 +17,7 @@ type Dice
     = Fortune
     | Misfortune
     | Expertise
-    | Characteritic
+    | Characteristic
     | Challenge
     | Conservative
     | Reckless
@@ -35,8 +35,8 @@ diceEncoder v =
         Expertise ->
             Json.Encode.string "Expertise"
 
-        Characteritic ->
-            Json.Encode.string "Characteritic"
+        Characteristic ->
+            Json.Encode.string "Characteristic"
 
         Challenge ->
             Json.Encode.string "Challenge"
@@ -64,7 +64,7 @@ diceDecoder =
                         Json.Decode.succeed Expertise
 
                     "Characteristic" ->
-                        Json.Decode.succeed Characteritic
+                        Json.Decode.succeed Characteristic
 
                     "Challenge" ->
                         Json.Decode.succeed Challenge

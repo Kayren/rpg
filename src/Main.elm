@@ -14,6 +14,7 @@ import Task
 import Views
 import WebSocket as Ws
 import RPG.Rpg as Rpg
+import RPG.Wardice as Wardice
 import Dom.Scroll as Scroll
 
 
@@ -104,15 +105,91 @@ update msg model =
         NewChatMessage ->
             (model |> Model.setChatMessage "")
                 ! [ { nick = model.nick, message = model.chatMessage }
-                        |> Debug.log "NewChatMessage"
                         |> Rpg.chatMessageEncoder
                         |> Json.Encode.encode 0
                         |> Ws.send model.config.url
                   ]
 
+        -- DiceSet
+        UpdateDiceSetFortune qte ->
+            (qte
+                |> flip Model.setDiceSetFortune model.diceSet
+                |> flip Model.setDiceSet model
+            )
+                ! []
+
+        UpdateDiceSetMisfortune qte ->
+            (qte
+                |> flip Model.setDiceSetMisfortune model.diceSet
+                |> flip Model.setDiceSet model
+            )
+                ! []
+
+        UpdateDiceSetExpertise qte ->
+            (qte
+                |> flip Model.setDiceSetExpertise model.diceSet
+                |> flip Model.setDiceSet model
+            )
+                ! []
+
+        UpdateDiceSetCharacteristic qte ->
+            (qte
+                |> flip Model.setDiceSetCharacteristic model.diceSet
+                |> flip Model.setDiceSet model
+            )
+                ! []
+
+        UpdateDiceSetChallenge qte ->
+            (qte
+                |> flip Model.setDiceSetChallenge model.diceSet
+                |> flip Model.setDiceSet model
+            )
+                ! []
+
+        UpdateDiceSetConservative qte ->
+            (qte
+                |> flip Model.setDiceSetConservative model.diceSet
+                |> flip Model.setDiceSet model
+            )
+                ! []
+
+        UpdateDiceSetReckless qte ->
+            (qte
+                |> flip Model.setDiceSetReckless model.diceSet
+                |> flip Model.setDiceSet model
+            )
+                ! []
+
+        RollDice ->
+            let
+                diceSet =
+                    []
+                        |> (++) (List.repeat model.diceSet.characteristic Wardice.Characteristic)
+                        |> (++) (List.repeat model.diceSet.challenge Wardice.Challenge)
+                        |> (++) (List.repeat model.diceSet.conservative Wardice.Conservative)
+                        |> (++) (List.repeat model.diceSet.reckless Wardice.Reckless)
+                        |> (++) (List.repeat model.diceSet.fortune Wardice.Fortune)
+                        |> (++) (List.repeat model.diceSet.misfortune Wardice.Misfortune)
+                        |> (++) (List.repeat model.diceSet.expertise Wardice.Expertise)
+            in
+                case List.isEmpty diceSet of
+                    True ->
+                        model ! []
+
+                    False ->
+                        (model
+                            |> Model.setDiceSet Model.initDiceSet
+                        )
+                            ! [ diceSet
+                                    |> Rpg.rollDicesEncoder
+                                    |> Json.Encode.encode 0
+                                    |> Ws.send model.config.url
+                              ]
+
         -- Server Response
         OnMessage message ->
-            Rpg.parseMessageIn message
+            Debug.log "message" message
+                |> Rpg.parseMessageIn
                 |> updateMessageIn model
 
         -- NoOp
@@ -139,7 +216,7 @@ updateMessageIn model msgIn =
                 ! [ Task.attempt (always NoOp) <| Scroll.toBottom "thread"
                   ]
 
-        Rpg.OnRollDicesResult data ->
+        Rpg.OnRollDice data ->
             (Rolls data
                 |> flip Model.addMessage model
             )

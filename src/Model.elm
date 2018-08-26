@@ -14,6 +14,7 @@ type alias Model =
     , ready : Bool
     , thread : List Message
     , chatMessage : String
+    , diceSet : DiceSet
     }
 
 
@@ -25,6 +26,7 @@ initModel flags =
     , ready = False
     , thread = []
     , chatMessage = ""
+    , diceSet = initDiceSet
     }
 
 
@@ -71,6 +73,11 @@ setChatMessage message model =
     { model | chatMessage = message }
 
 
+setDiceSet : DiceSet -> Model -> Model
+setDiceSet diceSet model =
+    { model | diceSet = diceSet }
+
+
 
 -- Message
 
@@ -79,12 +86,74 @@ type Message
     = Text TextMessage
     | Join Rpg.Nick
     | Leave Rpg.Nick
-    | Rolls Rpg.RollResult
+    | Rolls Rpg.RollDiceResult
     | Error Rpg.WSError
 
 
 type alias TextMessage =
     { nick : String, message : String }
+
+
+
+-- DiceSet
+
+
+type alias DiceSet =
+    { fortune : Int
+    , misfortune : Int
+    , expertise : Int
+    , characteristic : Int
+    , challenge : Int
+    , conservative : Int
+    , reckless : Int
+    }
+
+
+setDiceSetFortune : Int -> DiceSet -> DiceSet
+setDiceSetFortune qte ds =
+    { ds | fortune = qte }
+
+
+setDiceSetMisfortune : Int -> DiceSet -> DiceSet
+setDiceSetMisfortune qte ds =
+    { ds | misfortune = qte }
+
+
+setDiceSetExpertise : Int -> DiceSet -> DiceSet
+setDiceSetExpertise qte ds =
+    { ds | expertise = qte }
+
+
+setDiceSetCharacteristic : Int -> DiceSet -> DiceSet
+setDiceSetCharacteristic qte ds =
+    { ds | characteristic = qte }
+
+
+setDiceSetChallenge : Int -> DiceSet -> DiceSet
+setDiceSetChallenge qte ds =
+    { ds | challenge = qte }
+
+
+setDiceSetConservative : Int -> DiceSet -> DiceSet
+setDiceSetConservative qte ds =
+    { ds | conservative = qte }
+
+
+setDiceSetReckless : Int -> DiceSet -> DiceSet
+setDiceSetReckless qte ds =
+    { ds | reckless = qte }
+
+
+initDiceSet : DiceSet
+initDiceSet =
+    { fortune = 0
+    , misfortune = 0
+    , expertise = 0
+    , characteristic = 0
+    , challenge = 0
+    , conservative = 0
+    , reckless = 0
+    }
 
 
 
