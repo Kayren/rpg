@@ -6,6 +6,7 @@ import UrlParser exposing ((</>))
 
 type Route
     = Home
+    | Login
     | NotFound String
 
 
@@ -15,6 +16,9 @@ url route =
         Home ->
             "#/"
 
+        Login ->
+            "#/login"
+
         NotFound s ->
             s
 
@@ -22,7 +26,8 @@ url route =
 matchers : UrlParser.Parser (Route -> a) a
 matchers =
     UrlParser.oneOf
-        [ UrlParser.map Home (UrlParser.top)
+        [ UrlParser.map Login (UrlParser.s "login")
+        , UrlParser.map Home (UrlParser.top)
         , UrlParser.map NotFound (UrlParser.string) -- catch all
         ]
 

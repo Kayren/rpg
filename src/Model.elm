@@ -9,20 +9,26 @@ import Router exposing (Route)
 type alias Model =
     { config : Config
     , route : Router.Route
+    , nick : String
+    , ready : Bool
     }
 
 
-initModel : Model
-initModel =
-    { config = initConfig
-    , route = Router.Home
+initModel : Flags -> Model
+initModel flags =
+    { config = flags.config
+    , route = Router.Login
+    , nick = ""
+    , ready = False
     }
 
 
 resetModel : Model -> Model
 resetModel model =
     model
-        |> setRoute Router.Home
+        |> setRoute Router.Login
+        |> setNick ""
+        |> setReady False
 
 
 setConfig : Config -> Model -> Model
@@ -33,6 +39,16 @@ setConfig config model =
 setRoute : Route -> Model -> Model
 setRoute route model =
     { model | route = route }
+
+
+setNick : String -> Model -> Model
+setNick nick model =
+    { model | nick = nick }
+
+
+setReady : Bool -> Model -> Model
+setReady ready model =
+    { model | ready = ready }
 
 
 

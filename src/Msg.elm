@@ -9,5 +9,8 @@ type
     -- Router
     = OnChangeLocation Navigation.Location
     | ChangeLocation Router.Route
+      -- Login
+    | UpdateNickname String
+    | Login
       -- NoOp
     | NoOp

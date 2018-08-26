@@ -24,7 +24,7 @@ main =
 
 init : Model.Flags -> Navigation.Location -> ( Model, Cmd Msg )
 init flags location =
-    ( Model.initModel
+    ( Model.initModel flags
     , Task.succeed (OnChangeLocation location)
         |> Task.perform identity
     )
@@ -45,7 +45,15 @@ subscriptions model =
 
 filterRoute : Model -> Route -> Route
 filterRoute model route =
-    route
+    if model.ready then
+        case route of
+            Router.Login ->
+                Router.Home
+
+            _ ->
+                route
+    else
+        Router.Login
 
 
 gotoRoute : Route -> Cmd Msg
@@ -69,6 +77,17 @@ update msg model =
         ChangeLocation route ->
             ( model, gotoRoute route )
 
+        -- Login
+        UpdateNickname nick ->
+            (nick
+                |> flip Model.setNick model
+            )
+                ! []
+
+        Login ->
+            model ! []
+
+        -- NoOp
         NoOp ->
             model ! []
 
@@ -80,6 +99,9 @@ update msg model =
 view : Model -> Html Msg
 view model =
     case model.route of
+        Router.Login ->
+            Views.login model
+
         Router.Home ->
             Views.home
 

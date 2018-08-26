@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="RPG" />
+    <title>RPG</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="stylesheet" href="./main.css" type="text/css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css" type="text/css">
+    <script type="text/javascript" src="./config.js"></script>
+</head>
+
+<body>
+    <script type="text/javascript" src="./app.js"></script>
+    <script>
+        function checkConfig(config) {
+            if (config === undefined) {
+                return 'Config is missing.';
+            }
+
+            if (config.url === undefined) {
+                return 'config: config.url is undefined.';
+            }
+            if (config.url.indexOf('ws:') === -1 && config.url.indexOf('wss:') === -1) {
+                return 'config: invalid config.url protocol.';
+            }
+            return undefined;
+        }
+
+        function displayApp() {
+            console.log('using config', config)
+
+            // Setup app in fullscreen
+            const app = Elm.Main.fullscreen({
+                config: config,
+            });
+
+        }
+
+        // App config
+        const configIsSet = typeof config !== typeof undefined ? true : false;
+        var err;
+        if (!configIsSet) {
+            err = 'Config is missing.';
+        } else {
+            err = checkConfig(config);
+        }
+
+        if (err == undefined) { // Display an error page if config is invalid
+            displayApp();
+        } else {
+            console.log(err);
+        }
+
+    </script>
+</body>
+
+</html>
