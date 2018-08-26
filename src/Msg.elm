@@ -12,6 +12,9 @@ type
       -- Login
     | UpdateNickname String
     | Login
+      -- Chats
+    | UpdateChatMessage String
+    | NewChatMessage
       -- Server Response
     | OnMessage String
       -- NoOp

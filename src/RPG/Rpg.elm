@@ -16,9 +16,13 @@ type alias RollSet =
 
 
 type alias RollResult =
-    { nickname : String
+    { nick : String
     , results : List Wardice.DiceResult
     }
+
+
+type alias ChatMessage =
+    { nick : String, message : String }
 
 
 type alias WSError =
@@ -28,6 +32,7 @@ type alias WSError =
 type MessageOut
     = SetNick Nick
     | RollDice { dices : List Wardice.Dice }
+    | NewChatMessage ChatMessage
 
 
 setNickEncoder : String -> Json.Encode.Value
@@ -46,10 +51,20 @@ rollDicesEncoder dices =
         ]
 
 
+chatMessageEncoder : ChatMessage -> Json.Encode.Value
+chatMessageEncoder chatMessage =
+    Json.Encode.object
+        [ ( "cmd", Json.Encode.string "NewChatMessage" )
+        , ( "nick", Json.Encode.string chatMessage.nick )
+        , ( "message", Json.Encode.string chatMessage.message )
+        ]
+
+
 type MessageIn
     = OnNewClient Nick
     | OnClientLeave Nick
     | OnRollDicesResult RollResult
+    | OnChatMessage ChatMessage
     | Error WSError
 
 
@@ -83,6 +98,13 @@ messageInDecoder =
                             (Json.Decode.succeed RollResult
                                 |: Json.Decode.field "nick" Json.Decode.string
                                 |: Json.Decode.field "result" (Json.Decode.list Wardice.diceResultDecoder)
+                            )
+
+                    "OnChatMessage" ->
+                        Json.Decode.map OnChatMessage
+                            (Json.Decode.succeed ChatMessage
+                                |: Json.Decode.field "nick" Json.Decode.string
+                                |: Json.Decode.field "message" Json.Decode.string
                             )
 
                     "Error" ->

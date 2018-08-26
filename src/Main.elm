@@ -1,6 +1,6 @@
 port module Main exposing (..)
 
-import Model exposing (Model)
+import Model exposing (Model, Message(..))
 import Html exposing (Html)
 import Msg
     exposing
@@ -14,6 +14,7 @@ import Task
 import Views
 import WebSocket as Ws
 import RPG.Rpg as Rpg
+import Dom.Scroll as Scroll
 
 
 main : Program Model.Flags Model Msg
@@ -96,6 +97,19 @@ update msg model =
                         |> Ws.send model.config.url
                   ]
 
+        -- Chats
+        UpdateChatMessage message ->
+            (message |> flip Model.setChatMessage model) ! []
+
+        NewChatMessage ->
+            (model |> Model.setChatMessage "")
+                ! [ { nick = model.nick, message = model.chatMessage }
+                        |> Debug.log "NewChatMessage"
+                        |> Rpg.chatMessageEncoder
+                        |> Json.Encode.encode 0
+                        |> Ws.send model.config.url
+                  ]
+
         -- Server Response
         OnMessage message ->
             Rpg.parseMessageIn message
@@ -110,16 +124,41 @@ updateMessageIn : Model -> Rpg.MessageIn -> ( Model, Cmd Msg )
 updateMessageIn model msgIn =
     case msgIn of
         Rpg.OnNewClient data ->
-            (model |> Model.setReady True) ! [ gotoRoute Router.Home ]
+            (Join data
+                |> flip Model.addMessage model
+                |> Model.setReady True
+            )
+                ! [ gotoRoute Router.Home
+                  , Task.attempt (always NoOp) <| Scroll.toBottom "thread"
+                  ]
 
         Rpg.OnClientLeave data ->
-            model ! []
+            (Leave data
+                |> flip Model.addMessage model
+            )
+                ! [ Task.attempt (always NoOp) <| Scroll.toBottom "thread"
+                  ]
 
         Rpg.OnRollDicesResult data ->
-            model ! []
+            (Rolls data
+                |> flip Model.addMessage model
+            )
+                ! [ Task.attempt (always NoOp) <| Scroll.toBottom "thread"
+                  ]
+
+        Rpg.OnChatMessage data ->
+            (Text data
+                |> flip Model.addMessage model
+            )
+                ! [ Task.attempt (always NoOp) <| Scroll.toBottom "thread"
+                  ]
 
         Rpg.Error data ->
-            model ! []
+            (Error data
+                |> flip Model.addMessage model
+            )
+                ! [ Task.attempt (always NoOp) <| Scroll.toBottom "thread"
+                  ]
 
 
 
@@ -133,7 +172,7 @@ view model =
             Views.login model
 
         Router.Home ->
-            Views.home
+            Views.home model
 
         Router.NotFound path ->
             Views.notFound path model

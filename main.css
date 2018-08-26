@@ -6,7 +6,49 @@ body {
   width: 100vw;
 }
 
+.full-height {
+  height: 100vh;
+}
+
 /* Login */
 .login-box {
   margin-top: calc(40vh - 90px);
+}
+
+/* Thread */
+.thread {
+  margin-right: 1rem !important;
+  bottom: 0 !important;
+  height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: end !important;
+}
+
+.thread-list {
+  max-height: 85vh;
+  overflow-y: auto;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  margin-right: 0.5rem !important;
+  align-items: flex-end;
+}
+
+.thread-input {
+  height: 10vh;
+}
+
+.thread-item {
+  background: whitesmoke;
+  border: 0.5rem soldi black;
+}
+
+.thread-nickname {
+  font-weight: bold;
+  font-size: 1rem;
+  padding-left: 0.5rem;
+}
+
+.thread-message {
+  padding-left: 1rem;
 }

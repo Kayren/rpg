@@ -1,6 +1,7 @@
 module Model exposing (..)
 
 import Router exposing (Route)
+import RPG.Rpg as Rpg
 
 
 -- Model
@@ -11,6 +12,8 @@ type alias Model =
     , route : Router.Route
     , nick : String
     , ready : Bool
+    , thread : List Message
+    , chatMessage : String
     }
 
 
@@ -20,6 +23,8 @@ initModel flags =
     , route = Router.Login
     , nick = ""
     , ready = False
+    , thread = []
+    , chatMessage = ""
     }
 
 
@@ -49,6 +54,37 @@ setNick nick model =
 setReady : Bool -> Model -> Model
 setReady ready model =
     { model | ready = ready }
+
+
+setThread : List Message -> Model -> Model
+setThread messages model =
+    { model | thread = messages }
+
+
+addMessage : Message -> Model -> Model
+addMessage message model =
+    { model | thread = (::) message model.thread }
+
+
+setChatMessage : String -> Model -> Model
+setChatMessage message model =
+    { model | chatMessage = message }
+
+
+
+-- Message
+
+
+type Message
+    = Text TextMessage
+    | Join Rpg.Nick
+    | Leave Rpg.Nick
+    | Rolls Rpg.RollResult
+    | Error Rpg.WSError
+
+
+type alias TextMessage =
+    { nick : String, message : String }
 
 
 
