@@ -32,6 +32,8 @@ body {
 }
 
 .thread-list {
+  height: 85vh;
+  min-height: 85vh;
   max-height: 85vh;
   overflow-y: auto;
   flex-direction: row-reverse;
