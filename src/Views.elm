@@ -230,106 +230,145 @@ displayDiceForm diceSet =
         [ Html.form [ onSubmit RollDice ]
             [ div [ class "columns is-multiline" ]
                 [ div [ class "column is-3" ]
-                    [ div [ class "field is-horizontal" ]
-                        [ div [ class "field-label" ] [ div [ class "dice characteristic" ] [] ]
-                        , div [ class "field-body" ]
-                            [ input
-                                [ class "input"
-                                , type_ "number"
-                                , value <| Basics.toString diceSet.characteristic
-                                , onInputNumber UpdateDiceSetCharacteristic
-                                , Html.Attributes.min "0"
-                                , step "1"
+                    [ div [ class "field" ]
+                        [ div [ class "label" ] [ text "Caractéristique" ]
+                        , div [ class "field is-horizontal" ]
+                            [ div [ class "field-label" ] [ div [ class "dice characteristic" ] [] ]
+                            , div [ class "field-body" ]
+                                [ input
+                                    [ class "input"
+                                    , type_ "number"
+                                    , value <| Basics.toString diceSet.characteristic
+                                    , onInputNumber UpdateDiceSetCharacteristic
+                                    , Html.Attributes.min "0"
+                                    , Html.Attributes.max "5"
+                                    , step "1"
+                                    ]
+                                    []
                                 ]
-                                []
                             ]
                         ]
                     ]
-                ,div [class "column is-3"] [ div [ class "field is-horizontal" ]
-                    [ div [ class "field-label" ] [ div [ class "dice challenge" ] [] ]
-                    , div [ class "field-body" ]
-                        [ input
-                            [ class "input"
-                            , type_ "number"
-                            , value <| Basics.toString diceSet.challenge
-                            , onInputNumber UpdateDiceSetChallenge
-                            , Html.Attributes.min "0"
-                            , step "1"
+                , div [ class "column is-3" ]
+                    [ div [ class "field" ]
+                        [ div [ class "label" ] [ text "Défi" ]
+                        , div [ class "field is-horizontal" ]
+                            [ div [ class "field-label" ] [ div [ class "dice challenge" ] [] ]
+                            , div [ class "field-body" ]
+                                [ input
+                                    [ class "input"
+                                    , type_ "number"
+                                    , value <| Basics.toString diceSet.challenge
+                                    , onInputNumber UpdateDiceSetChallenge
+                                    , Html.Attributes.min "0"
+                                    , Html.Attributes.max "4"
+                                    , step "1"
+                                    ]
+                                    []
+                                ]
                             ]
-                            []
-                        ]
-                    ]]
-                , div [class "column is-3"] [div [ class "field is-horizontal" ]
-                    [ div [ class "field-label" ] [ div [ class "dice conservative" ] [] ]
-                    , div [ class "field-body" ]
-                        [ input
-                            [ class "input"
-                            , type_ "number"
-                            , value <| Basics.toString diceSet.conservative
-                            , onInputNumber UpdateDiceSetConservative
-                            , Html.Attributes.min "0"
-                            , step "1"
-                            ]
-                            []
-                        ]
-                    ]]
-                , div [ class "column is-3"] [div [ class "field is-horizontal" ]
-                    [ div [ class "field-label" ] [ div [ class "dice reckless" ] [] ]
-                    , div [ class "field-body" ]
-                        [ input
-                            [ class "input"
-                            , type_ "number"
-                            , value <| Basics.toString diceSet.reckless
-                            , onInputNumber UpdateDiceSetReckless
-                            , Html.Attributes.min "0"
-                            , step "1"
-                            ]
-                            []
-                        ]
-                    ]]
-                , div [ class "column is-3"] [div [ class "field is-horizontal" ]
-                    [ div [ class "field-label" ] [ div [ class "dice fortune" ] [] ]
-                    , div [ class "field-body" ]
-                        [ input
-                            [ class "input"
-                            , type_ "number"
-                            , value <| Basics.toString diceSet.fortune
-                            , onInputNumber UpdateDiceSetFortune
-                            , Html.Attributes.min "0"
-                            , step "1"
-                            ]
-                            []
-                        ]
-                    ]]
-                , div [ class "column is-3"] [div [ class "field is-horizontal" ]
-                    [ div [ class "field-label" ] [ div [ class "dice misfortune" ] [] ]
-                    , div [ class "field-body" ]
-                        [ input
-                            [ class "input"
-                            , type_ "number"
-                            , value <| Basics.toString diceSet.misfortune
-                            , onInputNumber UpdateDiceSetMisfortune
-                            , Html.Attributes.min "0"
-                            , step "1"
-                            ]
-                            []
-                        ]
-                    ]]
-                , div [ class "column is-3"] [div [ class "field is-horizontal" ]
-                    [ div [ class "field-label" ] [ div [ class "dice expertise" ] [] ]
-                    , div [ class "field-body" ]
-                        [ input
-                            [ class "input"
-                            , type_ "number"
-                            , value <| Basics.toString diceSet.expertise
-                            , onInputNumber UpdateDiceSetExpertise
-                            , Html.Attributes.min "0"
-                            , step "1"
-                            ]
-                            []
                         ]
                     ]
-                ]]
+                , div [ class "column is-3" ]
+                    [ div [ class "field" ]
+                        [ div [ class "label" ] [ text "Prudence" ]
+                        , div [ class "field is-horizontal" ]
+                            [ div [ class "field-label" ] [ div [ class "dice conservative" ] [] ]
+                            , div [ class "field-body" ]
+                                [ input
+                                    [ class "input"
+                                    , type_ "number"
+                                    , value <| Basics.toString diceSet.conservative
+                                    , onInputNumber UpdateDiceSetConservative
+                                    , Html.Attributes.min "0"
+                                    , Html.Attributes.max "6"
+                                    , step "1"
+                                    ]
+                                    []
+                                ]
+                            ]
+                        ]
+                    ]
+                , div [ class "column is-3" ]
+                    [ div [ class "field" ]
+                        [ div [ class "label" ] [ text "Témérité" ]
+                        , div [ class "field is-horizontal" ]
+                            [ div [ class "field-label" ] [ div [ class "dice reckless" ] [] ]
+                            , div [ class "field-body" ]
+                                [ input
+                                    [ class "input"
+                                    , type_ "number"
+                                    , value <| Basics.toString diceSet.reckless
+                                    , onInputNumber UpdateDiceSetReckless
+                                    , Html.Attributes.min "0"
+                                    , Html.Attributes.max "6"
+                                    , step "1"
+                                    ]
+                                    []
+                                ]
+                            ]
+                        ]
+                    ]
+                , div [ class "column is-3" ]
+                    [ div [ class "field" ]
+                        [ div [ class "label" ] [ text "Fortune" ]
+                        , div [ class "field is-horizontal" ]
+                            [ div [ class "field-label" ] [ div [ class "dice fortune" ] [] ]
+                            , div [ class "field-body" ]
+                                [ input
+                                    [ class "input"
+                                    , type_ "number"
+                                    , value <| Basics.toString diceSet.fortune
+                                    , onInputNumber UpdateDiceSetFortune
+                                    , Html.Attributes.min "0"
+                                    , step "1"
+                                    ]
+                                    []
+                                ]
+                            ]
+                        ]
+                    ]
+                , div [ class "column is-3" ]
+                    [ div [ class "field" ]
+                        [ div [ class "label" ] [ text "Infortune" ]
+                        , div [ class "field is-horizontal" ]
+                            [ div [ class "field-label" ] [ div [ class "dice misfortune" ] [] ]
+                            , div [ class "field-body" ]
+                                [ input
+                                    [ class "input"
+                                    , type_ "number"
+                                    , value <| Basics.toString diceSet.misfortune
+                                    , onInputNumber UpdateDiceSetMisfortune
+                                    , Html.Attributes.min "0"
+                                    , step "1"
+                                    ]
+                                    []
+                                ]
+                            ]
+                        ]
+                    ]
+                , div [ class "column is-3" ]
+                    [ div [ class "field" ]
+                        [ div [ class "label" ] [ text "Expertise" ]
+                        , div [ class "field is-horizontal" ]
+                            [ div [ class "field-label" ]
+                                [ div [ class "dice expertise" ] []
+                                ]
+                            , div [ class "field-body" ]
+                                [ input
+                                    [ class "input"
+                                    , type_ "number"
+                                    , value <| Basics.toString diceSet.expertise
+                                    , onInputNumber UpdateDiceSetExpertise
+                                    , Html.Attributes.min "0"
+                                    , step "1"
+                                    ]
+                                    []
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
             , button [ class "button is-uppercase is-primary is-pulled-right", type_ "submit" ] [ text "Lancer les dés!!!" ]
             ]
         ]
