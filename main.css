@@ -40,6 +40,7 @@ body {
   justify-content: flex-end;
   margin-right: 0.5rem !important;
   align-items: flex-end;
+  align-content: flex-end;
 }
 
 .thread-list .column {
